@@ -1,0 +1,35 @@
+<%- include("partials/header", { pageTitle: "Upload Photo" }) %>
+
+<section class="auth-card">
+  <h2>Upload Photo</h2>
+
+  <% if (errorMessage) { %>
+  <p class="message error"><%= errorMessage %></p>
+  <% } %>
+
+  <% if (successMessage) { %>
+  <p class="message success"><%= successMessage %></p>
+  <% } %>
+
+  <form
+    action="/photos/upload"
+    method="POST"
+    enctype="multipart/form-data"
+    class="form-grid"
+  >
+    <label for="title">Title</label>
+    <input type="text" id="title" name="title" required />
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4"></textarea>
+
+    <label for="photo">Image File</label>
+    <input type="file" id="photo" name="photo" accept="image/*" required />
+
+    <button type="submit">Upload</button>
+  </form>
+
+  <p class="helper-text"><a href="/photos/dashboard">Back to dashboard</a></p>
+</section>
+
+<%- include("partials/footer") %>

@@ -1,0 +1,52 @@
+<%- include("partials/header", { pageTitle: "Dashboard" }) %>
+
+<section class="dashboard-top">
+  <div>
+    <h2>Welcome, <%= currentUser.username %></h2>
+    <p class="helper-text">You can search, view, and download only your own photos.</p>
+  </div>
+  <a href="/photos/upload" class="button-link">Upload New Photo</a>
+</section>
+
+<% if (errorMessage) { %>
+<p class="message error"><%= errorMessage %></p>
+<% } %>
+
+<% if (successMessage) { %>
+<p class="message success"><%= successMessage %></p>
+<% } %>
+
+<form action="/photos/dashboard" method="GET" class="search-form">
+  <input
+    type="text"
+    name="q"
+    value="<%= searchTerm %>"
+    placeholder="Search by title or description"
+  />
+  <button type="submit">Search</button>
+  <% if (searchTerm) { %>
+  <a href="/photos/dashboard" class="clear-link">Clear</a>
+  <% } %>
+</form>
+
+<section class="photo-grid">
+  <% if (!photos || photos.length === 0) { %>
+  <p class="empty-state">No photos found yet.</p>
+  <% } %>
+
+  <% photos.forEach((photo) => { %>
+  <article class="photo-card">
+    <div class="preview-wrap">
+      <img src="/photos/image/<%= photo.id %>" alt="<%= photo.title %>" />
+    </div>
+    <h3><%= photo.title %></h3>
+    <p><%= photo.description || "No description" %></p>
+    <p class="small-text">
+      Uploaded: <%= new Date(photo.uploaded_at).toLocaleString() %>
+    </p>
+    <a class="button-link" href="/photos/download/<%= photo.id %>">Download</a>
+  </article>
+  <% }) %>
+</section>
+
+<%- include("partials/footer") %>

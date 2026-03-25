@@ -1,0 +1,30 @@
+<%- include("partials/header", { pageTitle: "Login" }) %>
+
+<section class="auth-card">
+  <h2>Login</h2>
+
+  <% if (errorMessage) { %>
+  <p class="message error"><%= errorMessage %></p>
+  <% } %>
+
+  <% if (successMessage) { %>
+  <p class="message success"><%= successMessage %></p>
+  <% } %>
+
+  <form action="/auth/login" method="POST" class="form-grid">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required />
+
+    <button type="submit">Log In</button>
+  </form>
+
+  <p class="helper-text">
+    New here?
+    <a href="/auth/register">Create an account</a>
+  </p>
+</section>
+
+<%- include("partials/footer") %>

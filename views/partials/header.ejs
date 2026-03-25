@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle || "Photo Gallery App" %></title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-row">
+        <h1 class="brand">Photo Gallery App</h1>
+        <nav class="nav-links">
+          <% if (currentUser) { %>
+          <a href="/photos/dashboard">Dashboard</a>
+          <a href="/photos/upload">Upload</a>
+          <form action="/auth/logout" method="POST" class="inline-form">
+            <button type="submit" class="link-button">Logout</button>
+          </form>
+          <% } else { %>
+          <a href="/auth/login">Login</a>
+          <a href="/auth/register">Register</a>
+          <% } %>
+        </nav>
+      </div>
+    </header>
+    <main class="container main-content">
