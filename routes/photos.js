@@ -8,7 +8,8 @@ const { requireAuth } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-const uploadDir = path.join(__dirname, "..", "uploads");
+// App Engine standard only allows writes under /tmp.
+const uploadDir = path.join("/tmp", "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -118,14 +119,15 @@ router.post("/upload", requireAuth, (req, res) => {
         VALUES (?, ?, ?, ?, ?)
       `;
 
-      const relativeFilePath = path.join("uploads", req.file.filename).replace(/\\/g, "/");
+      // Store the actual upload path so image/download work in /tmp on App Engine.
+      const storedFilePath = req.file.path.replace(/\\/g, "/");
 
       await pool.execute(insertSql, [
         req.session.user.id,
         title.trim(),
         description ? description.trim() : null,
         req.file.originalname,
-        relativeFilePath
+        storedFilePath
       ]);
 
       return res.redirect("/photos/dashboard?success=Photo uploaded successfully.");
@@ -155,7 +157,9 @@ router.get("/image/:id", requireAuth, async (req, res) => {
     }
 
     const photo = rows[0];
-    const absolutePath = path.resolve(__dirname, "..", photo.filepath);
+    const absolutePath = path.isAbsolute(photo.filepath)
+      ? photo.filepath
+      : path.resolve(__dirname, "..", photo.filepath);
 
     return res.sendFile(absolutePath);
   } catch (error) {
@@ -182,7 +186,9 @@ router.get("/download/:id", requireAuth, async (req, res) => {
     }
 
     const photo = rows[0];
-    const absolutePath = path.resolve(__dirname, "..", photo.filepath);
+    const absolutePath = path.isAbsolute(photo.filepath)
+      ? photo.filepath
+      : path.resolve(__dirname, "..", photo.filepath);
 
     return res.download(absolutePath, photo.filename);
   } catch (error) {
