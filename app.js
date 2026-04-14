@@ -7,9 +7,10 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
 const photoRoutes = require("./routes/photos");
 
-dotenv.config();
+dotenv.config();app.set("trust proxy", 1);
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = Number(process.env.PORT) || 3000;
 
 app.set("view engine", "ejs");
@@ -25,7 +26,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 // 1 hour
+      secure: process.env.NODE_ENV === "production", 
+      maxAge: 1000 * 60 * 60 
     }
   })
 );
