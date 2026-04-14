@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
 const photoRoutes = require("./routes/photos");
 
-dotenv.config();app.set("trust proxy", 1);
+dotenv.config();
 
 const app = express();
 app.set("trust proxy", 1);
